@@ -1,4 +1,4 @@
-from blocks import *
+from blocks import *  # коментарий для проверки
 from player import *
 from enemy import *
 import pygame
