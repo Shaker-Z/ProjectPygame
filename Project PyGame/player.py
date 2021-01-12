@@ -77,7 +77,10 @@ class Player(pygame.sprite.Sprite):
                         self.rect.collidepoint(e.rect.topright[0] - 10, e.rect.topright[1])) and \
                         not self.onGround and self.on_enemy(enemys) and self.clock.get_time() > 100:
                     self.yvel = -JUMP_POWER * 0.6
-                    e.kill()
+                    if e.killable:
+                        e.kill()
+                    elif e.__class__.__name__ == 'Hedgehog':
+                        e.hide()
 
     def on_enemy(self, enemys):
         for e in enemys:

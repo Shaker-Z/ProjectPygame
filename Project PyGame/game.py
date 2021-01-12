@@ -8,10 +8,6 @@ WIN_HEIGHT = 640
 DISPLAY = (WIN_WIDTH, WIN_HEIGHT)
 BACKGROUND_COLOR = "#004400"
 
-with open('level.txt', mode='rt', encoding='utf-8') as fl_level:
-    level = fl_level.readlines()
-
-
 class Camera:
     def __init__(self):
         self.dx = 0
@@ -39,6 +35,8 @@ def main():
     enemy_platforms = []
     win_platforms = []
     camera = Camera()
+    with open('level.txt', mode='rt', encoding='utf-8') as fl_level:
+        level = fl_level.readlines()
     x = 0
     y = 0
     for row in level[::-1]:
@@ -52,6 +50,10 @@ def main():
                 bl = Block(x, y)
                 entities.add(bl)
                 platforms.append(bl)
+            if col == '%':
+                ep = EnemyPlatform(x, y)
+                entities.add(ep)
+                enemy_platforms.append(ep)
             if col == '*':
                 hero = Player(x, y)
                 entities.add(hero)
@@ -59,10 +61,10 @@ def main():
                 en = Enemy(x, y)
                 entities.add(en)
                 enemys.add(en)
-            if col == '%':
-                ep = EnemyPlatform(x, y)
-                entities.add(ep)
-                enemy_platforms.append(ep)
+            if col == '=':
+                hg = Hedgehog(x, y)
+                entities.add(hg)
+                enemys.add(hg)
             if col == '!':
                 wp = WinPlatform(x, y)
                 entities.add(wp)
@@ -98,7 +100,7 @@ def main():
 
         camera.update(hero)
         hero.update(left, right, up, platforms, enemys)
-        enemys.update(enemy_platforms, hero)
+        enemys.update(enemy_platforms, hero, enemys)
 
         for sprite in entities:
             camera.apply(sprite)
