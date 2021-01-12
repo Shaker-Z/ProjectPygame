@@ -88,6 +88,7 @@ class Hedgehog(Enemy):
                 if yvel < 0:
                     self.rect.top = p.rect.bottom
                     self.yvel = 0
+
         if self.killable:
             for e in enemys:
                 if pygame.sprite.collide_rect(self, e):

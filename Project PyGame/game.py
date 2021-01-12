@@ -8,6 +8,7 @@ WIN_HEIGHT = 640
 DISPLAY = (WIN_WIDTH, WIN_HEIGHT)
 BACKGROUND_COLOR = "#004400"
 
+
 class Camera:
     def __init__(self):
         self.dx = 0

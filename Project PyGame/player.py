@@ -69,7 +69,6 @@ class Player(pygame.sprite.Sprite):
                     if p.__class__.__name__ == 'Block':
                         p.kill()
                         del platforms[platforms.index(p)]
-
         for e in enemys:
             if pygame.sprite.collide_rect(self, e):
                 if (self.rect.collidepoint(e.rect.midtop) or
