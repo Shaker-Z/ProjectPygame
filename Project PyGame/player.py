@@ -80,6 +80,9 @@ class Player(pygame.sprite.Sprite):
                         e.kill()
                     elif e.__class__.__name__ == 'Hedgehog':
                         e.hide()
+                    elif e.__class__.__name__ == 'Termite':
+                        self.hp -= 1
+                        print(self.hp)
 
     def on_enemy(self, enemys):
         for e in enemys:

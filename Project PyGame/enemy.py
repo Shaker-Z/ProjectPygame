@@ -5,8 +5,11 @@ WIDTH = 32
 HEIGHT = 27
 HG_WIDTH = 27
 HG_HEIGHT = 27
+TM_WIDTH = 42
+TM_HEIGHT = 42
 EN_COLOR = "#ff1111"
 HG_COLOR = "#fffe33"
+TM_COLOR = "#11fffe"
 GRAVITY = 0.35
 
 
@@ -23,7 +26,7 @@ class Enemy(pygame.sprite.Sprite):
         self.onGround = False
         self.killable = True
 
-    def update(self,  platforms, hero, enemys):
+    def update(self,  platforms, enemys):
         if not self.onGround:
             self.yvel += GRAVITY
         self.onGround = False
@@ -94,6 +97,41 @@ class Hedgehog(Enemy):
                 if pygame.sprite.collide_rect(self, e):
                     if e != self:
                         e.kill()
+
+
+class Termite(pygame.sprite.Sprite):
+    def __init__(self, x, y, platform):
+        pygame.sprite.Sprite.__init__(self)
+        self.startX = x
+        self.startY = y
+        self.image = pygame.Surface((TM_WIDTH, TM_HEIGHT))
+        self.image.fill(pygame.Color(TM_COLOR))
+        self.rect = pygame.Rect(x, y, TM_WIDTH, TM_HEIGHT)
+        self.yvel = MOVE_SPEED - 1
+        self.platfom = platform
+        self.tik = 0
+        self.killable = False
+
+    def update(self, platforms, enemys):
+        if self.rect.midbottom == self.platfom.rect.midtop:
+            self.rect.bottom = self.platfom.rect.top
+            self.tik = 0 if self.tik == 200 else self.tik
+            self.tik += 1
+        if self.rect.midbottom == self.platfom.rect.midbottom:
+            self.rect.bottom = self.platfom.rect.bottom
+            self.tik = 0 if self.tik == 200 else self.tik
+            self.tik += 1
+        if self.tik == 200:
+            self.move()
+
+    def move(self):
+        if self.rect.midbottom == self.platfom.rect.midtop:
+            self.yvel *= -1
+        if self.rect.midbottom == self.platfom.rect.midbottom:
+            self.yvel = abs(self.yvel)
+        self.rect.y -= self.yvel
+
+
 
 
 

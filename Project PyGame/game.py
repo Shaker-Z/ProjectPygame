@@ -32,6 +32,7 @@ def main():
     bg.fill(pygame.Color(BACKGROUND_COLOR))
     entities = pygame.sprite.Group()
     enemys = pygame.sprite.Group()
+    updateble_platforms = pygame.sprite.Group()
     platforms = []
     enemy_platforms = []
     win_platforms = []
@@ -42,6 +43,15 @@ def main():
     y = 0
     for row in level[::-1]:
         for col in row:
+            if col == '^':
+                pf = Platform(x, y)
+                updateble_platforms.add(pf)
+                entities.add(pf)
+                platforms.append(pf)
+                enemy_platforms.append(pf)
+                tm = Termite(x, y, pf)
+                entities.add(tm)
+                enemys.add(tm)
             if col == '-':
                 pf = Platform(x, y)
                 entities.add(pf)
@@ -101,11 +111,12 @@ def main():
 
         camera.update(hero)
         hero.update(left, right, up, platforms, enemys)
-        enemys.update(enemy_platforms, hero, enemys)
+        enemys.update(enemy_platforms, enemys)
 
         for sprite in entities:
             camera.apply(sprite)
         entities.draw(screen)
+        updateble_platforms.draw(screen)
         pygame.display.update()
 
         if hero.hp == 0:
