@@ -1,12 +1,12 @@
 import pygame
 
 MOVE_SPEED = 2
-WIDTH = 32
-HEIGHT = 27
-HG_WIDTH = 27
-HG_HEIGHT = 27
-TM_WIDTH = 42
-TM_HEIGHT = 42
+WIDTH = 35
+HEIGHT = 30
+HG_WIDTH = 30
+HG_HEIGHT = 30
+TM_WIDTH = 40
+TM_HEIGHT = 40
 EN_COLOR = "#ff1111"
 HG_COLOR = "#fffe33"
 TM_COLOR = "#11fffe"
@@ -16,7 +16,7 @@ GRAVITY = 0.35
 class Enemy(pygame.sprite.Sprite):
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
-        self.xvel = MOVE_SPEED
+        self.xvel = -MOVE_SPEED
         self.startX = x
         self.startY = y
         self.image = pygame.Surface((WIDTH, HEIGHT))

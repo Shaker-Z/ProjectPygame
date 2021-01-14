@@ -1,8 +1,8 @@
 import pygame
 
 MOVE_SPEED = 7
-WIDTH = 32
-HEIGHT = 32
+WIDTH = 35
+HEIGHT = 35
 JUMP_POWER = 11
 GRAVITY = 0.35
 COLOR = "#888888"
@@ -73,7 +73,8 @@ class Player(pygame.sprite.Sprite):
             if pygame.sprite.collide_rect(self, e):
                 if (self.rect.collidepoint(e.rect.midtop) or
                         self.rect.collidepoint(e.rect.topleft[0] + 10, e.rect.topleft[1]) or
-                        self.rect.collidepoint(e.rect.topright[0] - 10, e.rect.topright[1])) and \
+                        self.rect.collidepoint(e.rect.topright[0] - 10, e.rect.topright[1]) or
+                        self.rect.collidepoint(e.rect.center)) and \
                         not self.onGround and self.on_enemy(enemys) and self.clock.get_time() > 100:
                     self.yvel = -JUMP_POWER * 0.6
                     if e.killable:
