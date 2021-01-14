@@ -26,7 +26,8 @@ class Enemy(pygame.sprite.Sprite):
         self.onGround = False
         self.killable = True
 
-    def update(self,  platforms, enemys):
+    def update(self, platforms, enemys):
+
         if not self.onGround:
             self.yvel += GRAVITY
         self.onGround = False
@@ -67,7 +68,7 @@ class Hedgehog(Enemy):
 
     def hide(self):
         self.killable = True
-        self.xvel = MOVE_SPEED + 3.5
+        self.xvel = MOVE_SPEED + 3
         self.image = pygame.Surface((WIDTH+3, HEIGHT))
         self.image.fill(pygame.Color(HG_COLOR))
         self.rect = pygame.Rect(self.rect.x, self.rect.y, WIDTH+3, HEIGHT)

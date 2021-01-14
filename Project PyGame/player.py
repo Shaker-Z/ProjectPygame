@@ -1,6 +1,6 @@
 import pygame
 
-MOVE_SPEED = 7
+MOVE_SPEED = 4.5
 WIDTH = 35
 HEIGHT = 35
 JUMP_POWER = 11
@@ -13,8 +13,7 @@ class Player(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.hp = 5
         self.xvel = 0
-        self.startX = x
-        self.startY = y
+        self.start_pos = (x, y)
         self.image = pygame.Surface((WIDTH, HEIGHT))
         self.image.fill(pygame.Color(COLOR))
         self.rect = pygame.Rect(x, y, WIDTH, HEIGHT)
@@ -31,7 +30,6 @@ class Player(pygame.sprite.Sprite):
 
         if right:
             self.xvel = MOVE_SPEED
-
         if not (left or right):
             self.xvel = 0
         if not self.onGround:
@@ -62,6 +60,8 @@ class Player(pygame.sprite.Sprite):
                     self.rect.bottom = p.rect.top
                     self.onGround = True
                     self.yvel = 0
+                    if p.__class__.__name__ == 'FlyingPlatform':
+                        p.fall()
 
                 if yvel < 0:
                     self.rect.top = p.rect.bottom
@@ -72,9 +72,8 @@ class Player(pygame.sprite.Sprite):
         for e in enemys:
             if pygame.sprite.collide_rect(self, e):
                 if (self.rect.collidepoint(e.rect.midtop) or
-                        self.rect.collidepoint(e.rect.topleft[0] + 10, e.rect.topleft[1]) or
-                        self.rect.collidepoint(e.rect.topright[0] - 10, e.rect.topright[1]) or
-                        self.rect.collidepoint(e.rect.center)) and \
+                        self.rect.collidepoint(e.rect.topleft[0] + 5, e.rect.topleft[1]) or
+                        self.rect.collidepoint(e.rect.topright[0] - 5, e.rect.topright[1])) and \
                         not self.onGround and self.on_enemy(enemys) and self.clock.get_time() > 100:
                     self.yvel = -JUMP_POWER * 0.6
                     if e.killable:

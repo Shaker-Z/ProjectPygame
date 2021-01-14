@@ -33,11 +33,13 @@ def main():
     entities = pygame.sprite.Group()
     enemys = pygame.sprite.Group()
     updateble_platforms = pygame.sprite.Group()
+    fl_platforms = pygame.sprite.Group()
     platforms = []
     enemy_platforms = []
     win_platforms = []
     camera = Camera()
-    with open('level.txt', mode='rt', encoding='utf-8') as fl_level:
+    levelname = 'level2.txt'
+    with open(levelname, mode='rt', encoding='utf-8') as fl_level:
         level = fl_level.readlines()
     x = 0
     y = 0
@@ -61,6 +63,11 @@ def main():
                 bl = Block(x, y)
                 entities.add(bl)
                 platforms.append(bl)
+            if col == '_':
+                fp = FlyingPlatform(x, y)
+                entities.add(fp)
+                platforms.append(fp)
+                fl_platforms.add(fp)
             if col == '%':
                 ep = EnemyPlatform(x, y)
                 entities.add(ep)
@@ -112,6 +119,7 @@ def main():
         camera.update(hero)
         hero.update(left, right, up, platforms, enemys)
         enemys.update(enemy_platforms, enemys)
+        fl_platforms.update()
 
         for sprite in entities:
             camera.apply(sprite)
