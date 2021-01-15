@@ -27,9 +27,10 @@ def main():
     pygame.init()
     screen = pygame.display.set_mode(DISPLAY)
     pygame.display.set_caption("Super Kolobok Bros")
-    bg = pygame.Surface((WIN_WIDTH, WIN_HEIGHT))
+    # bg = pygame.Surface((WIN_WIDTH, WIN_HEIGHT))
+    bg = pygame.transform.scale(pygame.image.load('data/objects/bg_castle.png').convert(), (WIN_WIDTH, WIN_HEIGHT))
     timer = pygame.time.Clock()
-    bg.fill(pygame.Color(BACKGROUND_COLOR))
+    # bg.fill(pygame.Color(BACKGROUND_COLOR))
     entities = pygame.sprite.Group()
     enemys = pygame.sprite.Group()
     updateble_platforms = pygame.sprite.Group()
@@ -96,7 +97,6 @@ def main():
     running = True
     while running:
         screen.blit(bg, (0, 0))
-        timer.tick(60)
         for e in pygame.event.get():
             if e.type == pygame.QUIT:
                 running = False
@@ -125,8 +125,9 @@ def main():
             camera.apply(sprite)
         entities.draw(screen)
         updateble_platforms.draw(screen)
-        pygame.display.update()
 
+        pygame.display.update()
+        timer.tick(60)
         if hero.hp == 0:
             running = False
         if hero.is_win(win_platforms):

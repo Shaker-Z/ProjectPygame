@@ -1,6 +1,6 @@
 import pygame
 
-MOVE_SPEED = 4.5
+MOVE_SPEED = 5
 WIDTH = 35
 HEIGHT = 35
 JUMP_POWER = 11
@@ -14,8 +14,11 @@ class Player(pygame.sprite.Sprite):
         self.hp = 5
         self.xvel = 0
         self.start_pos = (x, y)
-        self.image = pygame.Surface((WIDTH, HEIGHT))
-        self.image.fill(pygame.Color(COLOR))
+        # self.image = pygame.Surface((WIDTH, HEIGHT))
+        # self.image.fill(pygame.Color(COLOR))
+        self.image = pygame.transform.scale(pygame.image.load('data/enemys/alienYellow_badge1.png').convert(),
+                                            (WIDTH, HEIGHT))
+        self.image.set_colorkey((0, 0, 0))
         self.rect = pygame.Rect(x, y, WIDTH, HEIGHT)
         self.yvel = 0
         self.onGround = False
