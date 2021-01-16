@@ -1,27 +1,32 @@
 import pygame
 
-PLATFORM_WIDTH = 42
-PLATFORM_HEIGHT = 42
-FL_PLATFORM_WIDTH = 42
-FL_PLATFORM_HEIGHT = 21
+PLATFORM_WIDTH = 45
+PLATFORM_HEIGHT = 45
+FL_PLATFORM_WIDTH = 45
+FL_PLATFORM_HEIGHT = 22
 PLATFORM_COLOR = "#FF6262"
 BLOCK_COLOR = "#fffe00"
 
 
 class Platform(pygame.sprite.Sprite):
-    def __init__(self, x, y):
+    def __init__(self, x, y, level):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.transform.scale(pygame.image.load('data/objects/castleCenter.png').convert(),
-                                            (PLATFORM_WIDTH, PLATFORM_HEIGHT))
+        if level == 'under':
+            self.image = pygame.transform.scale(pygame.image.load('data/objects/castleCenter.png').convert(),
+                                                (PLATFORM_WIDTH, PLATFORM_HEIGHT))
+        else:
+            self.image = pygame.transform.scale(pygame.image.load('data/objects/grassCenter.png').convert(),
+                                                (PLATFORM_WIDTH, PLATFORM_HEIGHT))
         self.rect = pygame.Rect(x, y, PLATFORM_WIDTH, PLATFORM_HEIGHT)
 
 
-class Block(Platform):
+class Block(pygame.sprite.Sprite):
     def __init__(self, x, y):
-        Platform.__init__(self, x, y)
+        pygame.sprite.Sprite.__init__(self)
         self.image = pygame.transform.scale(pygame.image.load('data/objects/boxCoin.png').convert(),
                                             (PLATFORM_WIDTH, PLATFORM_HEIGHT))
         self.image.set_colorkey((0, 0, 0))
+        self.rect = pygame.Rect(x, y, PLATFORM_WIDTH, PLATFORM_HEIGHT)
 
 
 class FlyingPlatform(pygame.sprite.Sprite):
@@ -45,9 +50,9 @@ class FlyingPlatform(pygame.sprite.Sprite):
             self.kill()
 
 
-class EnemyPlatform(Platform):
+class EnemyPlatform(Block):
     def __init__(self, x, y):
-        Platform.__init__(self, x, y)
+        Block.__init__(self, x, y)
         self.image = pygame.Surface((PLATFORM_WIDTH, PLATFORM_HEIGHT))
         self.image.set_colorkey((0,0,0))
 

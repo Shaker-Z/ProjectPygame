@@ -1,12 +1,12 @@
 import pygame
 
 MOVE_SPEED = 2
-WIDTH = 35
-HEIGHT = 30
-HG_WIDTH = 30
-HG_HEIGHT = 30
-TM_WIDTH = 42
-TM_HEIGHT = 42
+WIDTH = 38
+HEIGHT = 33
+HG_WIDTH = 33
+HG_HEIGHT = 33
+TM_WIDTH = 41
+TM_HEIGHT = 45
 EN_COLOR = "#ff1111"
 HG_COLOR = "#fffe33"
 TM_COLOR = "#11fffe"
@@ -111,7 +111,7 @@ class Termite(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(pygame.image.load('data/enemys/barnacle.png').convert(),
                                             (TM_WIDTH, TM_HEIGHT))
         self.image.set_colorkey((0, 0, 0))
-        self.rect = pygame.Rect(x, y, TM_WIDTH, TM_HEIGHT)
+        self.rect = pygame.Rect(x+2, y, TM_WIDTH, TM_HEIGHT)
         self.yvel = MOVE_SPEED - 1
         self.platfom = platform
         self.tik = 0
