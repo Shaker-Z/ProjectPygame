@@ -26,7 +26,8 @@ def main():
     pygame.init()
     screen = pygame.display.set_mode(DISPLAY)
     pygame.display.set_caption("Super Kolobok Bros")
-    bg = pygame.Surface((WIN_WIDTH, WIN_HEIGHT))
+    # bg = pygame.Surface((WIN_WIDTH, WIN_HEIGHT))
+
     timer = pygame.time.Clock()
     bg.fill(pygame.Color(BACKGROUND_COLOR))
     entities = pygame.sprite.Group()
@@ -35,14 +36,34 @@ def main():
     enemy_platforms = []
     win_platforms = []
     camera = Camera()
-    with open('level.txt', mode='rt', encoding='utf-8') as fl_level:
+    levelname = int(input('Номер уровня(1,2):'))
+    if levelname == 1:
+        levelname = 'level.txt'
+    elif levelname == 2:
+        levelname = 'level2.txt'
+    if levelname == 'level2.txt':
+        pos = 'under'
+        bg = pygame.transform.scale(pygame.image.load('data/objects/bg_castle.png').convert(), (WIN_WIDTH, WIN_HEIGHT))
+    else:
+        pos = 'up'
+        bg = pygame.transform.scale(pygame.image.load('data/objects/bg_grasslands.png').convert(), (WIN_WIDTH, WIN_HEIGHT))
+    with open(levelname, mode='rt', encoding='utf-8') as fl_level:
         level = fl_level.readlines()
     x = 0
     y = 0
     for row in level[::-1]:
         for col in row:
+            if col == '^':
+                pf = Platform(x, y, pos)
+                updateble_platforms.add(pf)
+                entities.add(pf)
+                platforms.append(pf)
+                enemy_platforms.append(pf)
+                tm = Termite(x, y, pf)
+                entities.add(tm)
+                enemys.add(tm)
             if col == '-':
-                pf = Platform(x, y)
+                pf = Platform(x, y, pos)
                 entities.add(pf)
                 platforms.append(pf)
                 enemy_platforms.append(pf)
