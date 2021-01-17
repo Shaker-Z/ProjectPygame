@@ -8,7 +8,6 @@ WIN_HEIGHT = 640
 DISPLAY = (WIN_WIDTH, WIN_HEIGHT)
 BACKGROUND_COLOR = "#004400"
 
-
 class Camera:
     def __init__(self):
         self.dx = 0
@@ -27,46 +26,23 @@ def main():
     pygame.init()
     screen = pygame.display.set_mode(DISPLAY)
     pygame.display.set_caption("Super Kolobok Bros")
-    # bg = pygame.Surface((WIN_WIDTH, WIN_HEIGHT))
-
+    bg = pygame.Surface((WIN_WIDTH, WIN_HEIGHT))
     timer = pygame.time.Clock()
-    # bg.fill(pygame.Color(BACKGROUND_COLOR))
+    bg.fill(pygame.Color(BACKGROUND_COLOR))
     entities = pygame.sprite.Group()
     enemys = pygame.sprite.Group()
-    updateble_platforms = pygame.sprite.Group()
-    fl_platforms = pygame.sprite.Group()
     platforms = []
     enemy_platforms = []
     win_platforms = []
     camera = Camera()
-    levelname = int(input('Номер уровня(1,2):'))
-    if levelname == 1:
-        levelname = 'level.txt'
-    elif levelname == 2:
-        levelname = 'level2.txt'
-    if levelname == 'level2.txt':
-        pos = 'under'
-        bg = pygame.transform.scale(pygame.image.load('data/objects/bg_castle.png').convert(), (WIN_WIDTH, WIN_HEIGHT))
-    else:
-        pos = 'up'
-        bg = pygame.transform.scale(pygame.image.load('data/objects/bg_grasslands.png').convert(), (WIN_WIDTH, WIN_HEIGHT))
-    with open(levelname, mode='rt', encoding='utf-8') as fl_level:
+    with open('level.txt', mode='rt', encoding='utf-8') as fl_level:
         level = fl_level.readlines()
     x = 0
     y = 0
     for row in level[::-1]:
         for col in row:
-            if col == '^':
-                pf = Platform(x, y, pos)
-                updateble_platforms.add(pf)
-                entities.add(pf)
-                platforms.append(pf)
-                enemy_platforms.append(pf)
-                tm = Termite(x, y, pf)
-                entities.add(tm)
-                enemys.add(tm)
             if col == '-':
-                pf = Platform(x, y, pos)
+                pf = Platform(x, y)
                 entities.add(pf)
                 platforms.append(pf)
                 enemy_platforms.append(pf)
@@ -74,11 +50,6 @@ def main():
                 bl = Block(x, y)
                 entities.add(bl)
                 platforms.append(bl)
-            if col == '_':
-                fp = FlyingPlatform(x, y)
-                entities.add(fp)
-                platforms.append(fp)
-                fl_platforms.add(fp)
             if col == '%':
                 ep = EnemyPlatform(x, y)
                 entities.add(ep)
@@ -107,6 +78,7 @@ def main():
     running = True
     while running:
         screen.blit(bg, (0, 0))
+        timer.tick(60)
         for e in pygame.event.get():
             if e.type == pygame.QUIT:
                 running = False
@@ -128,16 +100,13 @@ def main():
 
         camera.update(hero)
         hero.update(left, right, up, platforms, enemys)
-        enemys.update(enemy_platforms, enemys)
-        fl_platforms.update()
+        enemys.update(enemy_platforms, hero, enemys)
 
         for sprite in entities:
             camera.apply(sprite)
         entities.draw(screen)
-        updateble_platforms.draw(screen)
-
         pygame.display.update()
-        timer.tick(60)
+
         if hero.hp == 0:
             running = False
         if hero.is_win(win_platforms):
