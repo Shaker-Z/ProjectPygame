@@ -8,6 +8,7 @@ WIN_HEIGHT = 640
 DISPLAY = (WIN_WIDTH, WIN_HEIGHT)
 BACKGROUND_COLOR = "#004400"
 
+
 class Camera:
     def __init__(self):
         self.dx = 0
@@ -29,9 +30,11 @@ def main():
     # bg = pygame.Surface((WIN_WIDTH, WIN_HEIGHT))
 
     timer = pygame.time.Clock()
-    bg.fill(pygame.Color(BACKGROUND_COLOR))
+    # bg.fill(pygame.Color(BACKGROUND_COLOR))
     entities = pygame.sprite.Group()
     enemys = pygame.sprite.Group()
+    updateble_platforms = pygame.sprite.Group()
+    fl_platforms = pygame.sprite.Group()
     platforms = []
     enemy_platforms = []
     win_platforms = []
@@ -71,6 +74,11 @@ def main():
                 bl = Block(x, y)
                 entities.add(bl)
                 platforms.append(bl)
+            if col == '_':
+                fp = FlyingPlatform(x, y)
+                entities.add(fp)
+                platforms.append(fp)
+                fl_platforms.add(fp)
             if col == '%':
                 ep = EnemyPlatform(x, y)
                 entities.add(ep)
@@ -99,7 +107,6 @@ def main():
     running = True
     while running:
         screen.blit(bg, (0, 0))
-        timer.tick(60)
         for e in pygame.event.get():
             if e.type == pygame.QUIT:
                 running = False
@@ -121,13 +128,16 @@ def main():
 
         camera.update(hero)
         hero.update(left, right, up, platforms, enemys)
-        enemys.update(enemy_platforms, hero, enemys)
+        enemys.update(enemy_platforms, enemys)
+        fl_platforms.update()
 
         for sprite in entities:
             camera.apply(sprite)
         entities.draw(screen)
-        pygame.display.update()
+        updateble_platforms.draw(screen)
 
+        pygame.display.update()
+        timer.tick(60)
         if hero.hp == 0:
             running = False
         if hero.is_win(win_platforms):

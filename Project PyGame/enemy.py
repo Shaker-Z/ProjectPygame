@@ -9,23 +9,26 @@ TM_WIDTH = 41
 TM_HEIGHT = 45
 EN_COLOR = "#ff1111"
 HG_COLOR = "#fffe33"
+TM_COLOR = "#11fffe"
 GRAVITY = 0.35
 
 
 class Enemy(pygame.sprite.Sprite):
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
-        self.xvel = MOVE_SPEED
+        self.xvel = -MOVE_SPEED
         self.startX = x
         self.startY = y
-        self.image = pygame.Surface((WIDTH, HEIGHT))
-        self.image.fill(pygame.Color(EN_COLOR))
+        self.image = pygame.transform.scale(pygame.image.load('data/enemys/slime.png').convert(),
+                                            (WIDTH, HEIGHT))
+        self.image.set_colorkey((0, 0, 0))
         self.rect = pygame.Rect(x, y, WIDTH, HEIGHT)
         self.yvel = 0
         self.onGround = False
         self.killable = True
 
-    def update(self,  platforms, hero, enemys):
+    def update(self, platforms, enemys):
+
         if not self.onGround:
             self.yvel += GRAVITY
         self.onGround = False
@@ -59,17 +62,19 @@ class Enemy(pygame.sprite.Sprite):
 class Hedgehog(Enemy):
     def __init__(self, x, y):
         Enemy.__init__(self, x, y)
-        self.image = pygame.Surface((HG_WIDTH, HG_HEIGHT))
-        self.image.fill(pygame.Color(HG_COLOR))
+        self.image = pygame.transform.scale(pygame.image.load('data/enemys/snail.png').convert(),
+                                            (HG_WIDTH, HG_HEIGHT))
+        self.image.set_colorkey((0, 0, 0))
         self.rect = pygame.Rect(x, y, HG_WIDTH, HG_HEIGHT)
         self.killable = False
 
     def hide(self):
         self.killable = True
-        self.xvel = MOVE_SPEED + 3.5
-        self.image = pygame.Surface((WIDTH+3, HEIGHT))
-        self.image.fill(pygame.Color(HG_COLOR))
-        self.rect = pygame.Rect(self.rect.x, self.rect.y, WIDTH+3, HEIGHT)
+        self.xvel = MOVE_SPEED + 3
+        self.image = pygame.transform.scale(pygame.image.load('data/enemys/snail_shell.png').convert(),
+                                            (WIDTH, HEIGHT))
+        self.image.set_colorkey((0, 0, 0))
+        self.rect = pygame.Rect(self.rect.x, self.rect.y, WIDTH, HEIGHT)
 
     def collide(self, xvel, yvel, platforms, enemys):
         for p in platforms:
@@ -90,6 +95,7 @@ class Hedgehog(Enemy):
                 if yvel < 0:
                     self.rect.top = p.rect.bottom
                     self.yvel = 0
+
         if self.killable:
             for e in enemys:
                 if pygame.sprite.collide_rect(self, e):
