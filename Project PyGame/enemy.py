@@ -1,7 +1,7 @@
 import pygame
 
 MOVE_SPEED = 2
-WIDTH = 38
+WIDTH = 35
 HEIGHT = 33
 HG_WIDTH = 33
 HG_HEIGHT = 33

@@ -34,6 +34,7 @@ def main():
     entities = pygame.sprite.Group()
     enemys = pygame.sprite.Group()
     updateble_platforms = pygame.sprite.Group()
+    coins = pygame.sprite.Group()
     fl_platforms = pygame.sprite.Group()
     platforms = []
     enemy_platforms = []
@@ -72,8 +73,15 @@ def main():
                 enemy_platforms.append(pf)
             if col == '#':
                 bl = Block(x, y)
+                cn = Coin(x, y)
+                entities.add(cn)
+                coins.add(cn)
                 entities.add(bl)
                 platforms.append(bl)
+            if col == 'C':
+                cn = Coin(x, y)
+                entities.add(cn)
+                coins.add(cn)
             if col == '_':
                 fp = FlyingPlatform(x, y)
                 entities.add(fp)
@@ -105,6 +113,7 @@ def main():
     left = right = False
     up = False
     running = True
+    font = pygame.font.Font(None, 50)
     while running:
         screen.blit(bg, (0, 0))
         for e in pygame.event.get():
@@ -127,7 +136,7 @@ def main():
                 right = False
 
         camera.update(hero)
-        hero.update(left, right, up, platforms, enemys)
+        hero.update(left, right, up, platforms, enemys, coins)
         enemys.update(enemy_platforms, enemys)
         fl_platforms.update()
 
@@ -135,7 +144,10 @@ def main():
             camera.apply(sprite)
         entities.draw(screen)
         updateble_platforms.draw(screen)
-
+        text = font.render(str(hero.score), True, (255, 255, 255))
+        text_rect = text.get_rect(topleft=(hero.rect.topright[0] - WIN_WIDTH//2,
+                                           hero.rect.topright[1] + WIN_HEIGHT//2.25))
+        screen.blit(text, text_rect)
         pygame.display.update()
         timer.tick(60)
         if hero.hp == 0:

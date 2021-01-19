@@ -1,8 +1,8 @@
 import pygame
 
 MOVE_SPEED = 5
-WIDTH = 38
-HEIGHT = 38
+WIDTH = 35
+HEIGHT = 35
 JUMP_POWER = 11
 GRAVITY = 0.35
 COLOR = "#888888"
@@ -12,6 +12,7 @@ class Player(pygame.sprite.Sprite):
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
         self.hp = 5
+        self.score = 0
         self.xvel = 0
         self.start_pos = (x, y)
         # self.image = pygame.Surface((WIDTH, HEIGHT))
@@ -26,7 +27,7 @@ class Player(pygame.sprite.Sprite):
         self.onGround = False
         self.clock = pygame.time.Clock()
 
-    def update(self, left, right, up, platforms, enemys):
+    def update(self, left, right, up, platforms, enemys, coins):
         if up:
             if self.onGround:
                 self.yvel = -JUMP_POWER
@@ -58,16 +59,16 @@ class Player(pygame.sprite.Sprite):
 
         self.onGround = False
         self.rect.y += self.yvel
-        self.collide(0, self.yvel, platforms, enemys)
+        self.collide(0, self.yvel, platforms, enemys, coins)
 
         self.rect.x += self.xvel
-        self.collide(self.xvel, 0, platforms, enemys)
+        self.collide(self.xvel, 0, platforms, enemys, coins)
 
         if self.on_enemy(enemys) and self.clock.get_time() > 100:
             self.hp -= 1
             print(self.hp)
 
-    def collide(self, xvel, yvel, platforms, enemys):
+    def collide(self, xvel, yvel, platforms, enemys, coins):
         for p in platforms:
             if pygame.sprite.collide_rect(self, p):
 
@@ -104,6 +105,11 @@ class Player(pygame.sprite.Sprite):
                     elif e.__class__.__name__ == 'Termite':
                         self.hp -= 1
                         print(self.hp)
+
+        for c in coins:
+            if pygame.sprite.collide_rect(self, c):
+                self.score += 10
+                c.kill()
 
     def on_enemy(self, enemys):
         for e in enemys:
