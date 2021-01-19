@@ -11,13 +11,11 @@ COLOR = "#888888"
 class Player(pygame.sprite.Sprite):
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
-        self.hp = 5
+        self.hp = 1
         self.score = 0
         self.xvel = 0
         self.start_pos = (x, y)
-        # self.image = pygame.Surface((WIDTH, HEIGHT))
-        # self.image.fill(pygame.Color(COLOR))
-        self.original_image = pygame.transform.scale(pygame.image.load('data/enemys/alienYellow_badge1.png').convert(),
+        self.original_image = pygame.transform.scale(pygame.image.load('data/enemys/kolobok.png').convert(),
                                                      (WIDTH, HEIGHT))
         self.image = self.original_image
         self.angle = 0
@@ -91,6 +89,9 @@ class Player(pygame.sprite.Sprite):
                     if p.__class__.__name__ == 'Block':
                         p.kill()
                         del platforms[platforms.index(p)]
+                    if p.__class__.__name__ == 'ItemBlock':
+                        # p.item.rect.y += p.item.rect.h
+                        p.item.active = True
         for e in enemys:
             if pygame.sprite.collide_rect(self, e):
                 if (self.rect.collidepoint(e.rect.midtop[0], e.rect.midtop[1]+5) or
@@ -100,20 +101,26 @@ class Player(pygame.sprite.Sprite):
                     self.yvel = -JUMP_POWER * 0.6
                     if e.killable:
                         e.kill()
+                        self.score += 10
                     elif e.__class__.__name__ == 'Hedgehog':
                         e.hide()
                     elif e.__class__.__name__ == 'Termite':
                         self.hp -= 1
                         print(self.hp)
+                if e.__class__.__name__ == 'Cherry':
+                    e.kill()
+                    self.hp += 1
+                    print(self.hp)
 
         for c in coins:
             if pygame.sprite.collide_rect(self, c):
-                self.score += 10
+                self.score += 5
                 c.kill()
 
     def on_enemy(self, enemys):
         for e in enemys:
-            if self.rect.collidepoint(e.rect.midleft) or self.rect.collidepoint(e.rect.midright):
+            if (self.rect.collidepoint(e.rect.midleft) or self.rect.collidepoint(e.rect.midright)) \
+                    and e.__class__.__name__ != 'Cherry':
                 self.yvel = -JUMP_POWER * 0.5
                 self.clock.tick()
                 return True

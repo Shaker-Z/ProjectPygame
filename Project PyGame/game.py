@@ -3,8 +3,8 @@ from player import *
 from enemy import *
 import pygame
 
-WIN_WIDTH = 800
-WIN_HEIGHT = 640
+WIN_WIDTH = 1000
+WIN_HEIGHT = 700
 DISPLAY = (WIN_WIDTH, WIN_HEIGHT)
 BACKGROUND_COLOR = "#004400"
 
@@ -27,10 +27,7 @@ def main():
     pygame.init()
     screen = pygame.display.set_mode(DISPLAY)
     pygame.display.set_caption("Super Kolobok Bros")
-    # bg = pygame.Surface((WIN_WIDTH, WIN_HEIGHT))
-
     timer = pygame.time.Clock()
-    # bg.fill(pygame.Color(BACKGROUND_COLOR))
     entities = pygame.sprite.Group()
     enemys = pygame.sprite.Group()
     updateble_platforms = pygame.sprite.Group()
@@ -78,6 +75,15 @@ def main():
                 coins.add(cn)
                 entities.add(bl)
                 platforms.append(bl)
+                enemy_platforms.append(bl)
+            if col == '&':
+                ch = Cherry(x, y)
+                entities.add(ch)
+                enemys.add(ch)
+                ib = ItemBlock(x, y, ch)
+                entities.add(ib)
+                platforms.append(ib)
+                enemy_platforms.append(ib)
             if col == 'C':
                 cn = Coin(x, y)
                 entities.add(cn)
@@ -145,9 +151,13 @@ def main():
         entities.draw(screen)
         updateble_platforms.draw(screen)
         text = font.render(str(hero.score), True, (255, 255, 255))
-        text_rect = text.get_rect(topleft=(hero.rect.topright[0] - WIN_WIDTH//2,
-                                           hero.rect.topright[1] + WIN_HEIGHT//2.25))
+        text_rect = text.get_rect(topleft=(15, 15))
         screen.blit(text, text_rect)
+        x, y = 15, WIN_HEIGHT - 50
+        for i in range(hero.hp):
+            t = HP(x, y)
+            screen.blit(t.image, t.rect)
+            x += t.rect.w + 5
         pygame.display.update()
         timer.tick(60)
         if hero.hp == 0:

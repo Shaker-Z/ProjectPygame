@@ -3,13 +3,12 @@ import pygame
 MOVE_SPEED = 2
 WIDTH = 35
 HEIGHT = 33
+CH_WIDTH = 35
+CH_HEIGHT = 35
 HG_WIDTH = 33
 HG_HEIGHT = 33
 TM_WIDTH = 41
 TM_HEIGHT = 45
-EN_COLOR = "#ff1111"
-HG_COLOR = "#fffe33"
-TM_COLOR = "#11fffe"
 GRAVITY = 0.35
 
 
@@ -99,7 +98,7 @@ class Hedgehog(Enemy):
         if self.killable:
             for e in enemys:
                 if pygame.sprite.collide_rect(self, e):
-                    if e != self:
+                    if e != self and e.__class__.__name__ != 'Cherry':
                         e.kill()
 
 
@@ -135,6 +134,48 @@ class Termite(pygame.sprite.Sprite):
         if self.rect.midbottom == self.platfom.rect.midbottom:
             self.yvel = abs(self.yvel)
         self.rect.y -= self.yvel
+
+
+class Cherry(pygame.sprite.Sprite):
+    def __init__(self, x, y):
+        pygame.sprite.Sprite.__init__(self)
+        self.xvel = MOVE_SPEED - 1
+        self.image = pygame.transform.scale(pygame.image.load('data/enemys/cherry.png').convert(),
+                                            (CH_WIDTH, CH_HEIGHT))
+        self.image.set_colorkey((0, 0, 0))
+        self.rect = pygame.Rect(x, y+7, CH_WIDTH, CH_HEIGHT)
+        self.startY = self.rect.y
+        self.startX = self.rect.x
+        self.active = False
+        self.yvel = 0
+        self.onGround = False
+        self.killable = True
+
+    def update(self, platforms, enemys):
+        if self.active:
+            if not self.onGround:
+                self.yvel += GRAVITY
+            self.onGround = False
+            self.rect.y += self.yvel
+            self.collide(0, self.yvel, platforms, enemys)
+
+            self.rect.x += self.xvel
+            self.collide(self.xvel, 0, platforms, enemys)
+
+    def collide(self, xvel, yvel, platforms, enemys):
+        for p in platforms:
+            if pygame.sprite.collide_rect(self, p):
+                if xvel > 0:
+                    self.rect.right = p.rect.left
+                if xvel < 0:
+                    self.rect.left = p.rect.right
+                if yvel > 0:
+                    self.rect.bottom = p.rect.top
+                    self.onGround = True
+                    self.yvel = 0
+                if yvel < 0:
+                    self.rect.top = p.rect.bottom
+                    self.yvel = 0
 
 
 
