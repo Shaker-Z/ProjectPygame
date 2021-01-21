@@ -45,13 +45,24 @@ def main():
     if levelname == 'level2.txt':
         pos = 'under'
         bg = pygame.transform.scale(pygame.image.load('data/objects/bg_castle.png').convert(), (WIN_WIDTH, WIN_HEIGHT))
+        pygame.mixer.music.load('data/sounds/underground-saundtrak.mp3')
     else:
         pos = 'up'
         bg = pygame.transform.scale(pygame.image.load('data/objects/bg_grasslands.png').convert(), (WIN_WIDTH, WIN_HEIGHT))
+        pygame.mixer.music.load('data/sounds/saundtrek.mp3')
+    pygame.mixer.music.set_volume(0.25)
+    pygame.mixer.music.play(loops=100)
     with open(levelname, mode='rt', encoding='utf-8') as fl_level:
         level = fl_level.readlines()
     x = 0
     y = 0
+    flore = pygame.sprite.Sprite()
+    flore.rect = pygame.Rect(x, y+PLATFORM_HEIGHT, PLATFORM_WIDTH*len(level[-1]), PLATFORM_HEIGHT*2)
+    flore.image = pygame.Surface([PLATFORM_WIDTH*len(level[-1]), PLATFORM_HEIGHT*2])
+    flore.image.fill(BACKGROUND_COLOR)
+    platforms.append(flore)
+    entities.add(flore)
+    enemy_platforms.append(flore)
     for row in level[::-1]:
         for col in row:
             if col == '^':
@@ -150,7 +161,7 @@ def main():
             camera.apply(sprite)
         entities.draw(screen)
         updateble_platforms.draw(screen)
-        text = font.render(str(hero.score), True, (255, 255, 255))
+        text = font.render(str(hero.score).rjust(5, '0'), True, (204, 50, 50))
         text_rect = text.get_rect(topleft=(15, 15))
         screen.blit(text, text_rect)
         x, y = 15, WIN_HEIGHT - 50

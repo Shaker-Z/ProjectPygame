@@ -24,11 +24,16 @@ class Player(pygame.sprite.Sprite):
         self.yvel = 0
         self.onGround = False
         self.clock = pygame.time.Clock()
+        self.jump_sound = pygame.mixer.Sound('data/sounds/jump.mp3')
+        self.jump_sound.set_volume(0.25)
+        self.coin_get_sound = pygame.mixer.Sound('data/sounds/coin.mp3')
+        self.coin_get_sound.set_volume(0.25)
 
     def update(self, left, right, up, platforms, enemys, coins):
         if up:
             if self.onGround:
                 self.yvel = -JUMP_POWER
+                self.jump_sound.play()
         if left:
             self.xvel = -MOVE_SPEED
             self.angle += 4 % 360
@@ -90,7 +95,7 @@ class Player(pygame.sprite.Sprite):
                         p.kill()
                         del platforms[platforms.index(p)]
                     if p.__class__.__name__ == 'ItemBlock':
-                        # p.item.rect.y += p.item.rect.h
+                        p.item.rect.y -= p.item.rect.h
                         p.item.active = True
         for e in enemys:
             if pygame.sprite.collide_rect(self, e):
@@ -115,6 +120,7 @@ class Player(pygame.sprite.Sprite):
         for c in coins:
             if pygame.sprite.collide_rect(self, c):
                 self.score += 5
+                self.coin_get_sound.play()
                 c.kill()
 
     def on_enemy(self, enemys):

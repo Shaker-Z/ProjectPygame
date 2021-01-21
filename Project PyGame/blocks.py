@@ -42,9 +42,9 @@ class Coin(pygame.sprite.Sprite):
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.transform.scale(pygame.image.load('data/objects/coin.png').convert(),
-                                            (PLATFORM_WIDTH, PLATFORM_HEIGHT))
+                                            (PLATFORM_WIDTH, PLATFORM_HEIGHT-1))
         self.image.set_colorkey((0, 0, 0))
-        self.rect = pygame.Rect(x, y, PLATFORM_WIDTH+1, PLATFORM_HEIGHT+1)
+        self.rect = pygame.Rect(x, y+1, PLATFORM_WIDTH, PLATFORM_HEIGHT)
 
 
 class HP(pygame.sprite.Sprite):
