@@ -72,9 +72,7 @@ class Player(pygame.sprite.Sprite):
             print(self.hp)
 
     def collide(self, xvel, yvel, platforms, enemys, coins):
-        for p in platforms:
-            if pygame.sprite.collide_rect(self, p):
-
+        for p in pygame.sprite.groupcollide(platforms, pygame.sprite.GroupSingle(self), False, False):
                 if xvel > 0:
                     self.rect.right = p.rect.left
 
@@ -93,11 +91,10 @@ class Player(pygame.sprite.Sprite):
                     self.yvel = 0
                     if p.__class__.__name__ == 'Block':
                         p.kill()
-                        del platforms[platforms.index(p)]
                     if p.__class__.__name__ == 'ItemBlock':
                         p.item.rect.y -= p.item.rect.h
                         p.item.active = True
-        for e in enemys:
+        for e in pygame.sprite.groupcollide(enemys, pygame.sprite.GroupSingle(self), False, False):
             if pygame.sprite.collide_rect(self, e):
                 if (self.rect.collidepoint(e.rect.midtop[0], e.rect.midtop[1]+5) or
                         self.rect.collidepoint(e.rect.topleft[0] + 5, e.rect.topleft[1]) or
@@ -117,11 +114,10 @@ class Player(pygame.sprite.Sprite):
                     self.hp += 1
                     print(self.hp)
 
-        for c in coins:
-            if pygame.sprite.collide_rect(self, c):
-                self.score += 5
-                self.coin_get_sound.play()
-                c.kill()
+        for c in pygame.sprite.groupcollide(coins, pygame.sprite.GroupSingle(self), False, False):
+            self.score += 5
+            self.coin_get_sound.play()
+            c.kill()
 
     def on_enemy(self, enemys):
         for e in enemys:

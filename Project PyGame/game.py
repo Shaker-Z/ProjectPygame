@@ -1,4 +1,4 @@
-from blocks import *  # коментарий для проверки
+from blocks import *
 from player import *
 from enemy import *
 import pygame
@@ -33,8 +33,8 @@ def main():
     updateble_platforms = pygame.sprite.Group()
     coins = pygame.sprite.Group()
     fl_platforms = pygame.sprite.Group()
-    platforms = []
-    enemy_platforms = []
+    platforms = pygame.sprite.Group()
+    enemy_platforms = pygame.sprite.Group()
     win_platforms = []
     camera = Camera()
     levelname = int(input('Номер уровня(1,2):'))
@@ -56,45 +56,48 @@ def main():
         level = fl_level.readlines()
     x = 0
     y = 0
-    flore = pygame.sprite.Sprite()
-    flore.rect = pygame.Rect(x, y+PLATFORM_HEIGHT, PLATFORM_WIDTH*len(level[-1]), PLATFORM_HEIGHT*2)
-    flore.image = pygame.Surface([PLATFORM_WIDTH*len(level[-1]), PLATFORM_HEIGHT*2])
-    flore.image.fill(BACKGROUND_COLOR)
-    platforms.append(flore)
-    entities.add(flore)
-    enemy_platforms.append(flore)
+    f = True
     for row in level[::-1]:
         for col in row:
             if col == '^':
                 pf = Platform(x, y, pos)
                 updateble_platforms.add(pf)
                 entities.add(pf)
-                platforms.append(pf)
-                enemy_platforms.append(pf)
+                platforms.add(pf)
+                enemy_platforms.add(pf)
                 tm = Termite(x, y, pf)
                 entities.add(tm)
                 enemys.add(tm)
             if col == '-':
-                pf = Platform(x, y, pos)
+                if f:
+                    pf = Platform(x, y, pos)
+                    f = False
+                else:
+                    t = Platform(x, y, pos)
+                    entities.add(t)
+                    pf.rect = pf.rect.union(t.rect)
+            elif pf not in entities:
                 entities.add(pf)
-                platforms.append(pf)
-                enemy_platforms.append(pf)
+                platforms.add(pf)
+                enemy_platforms.add(pf)
+                f = True
+
             if col == '#':
                 bl = Block(x, y)
                 cn = Coin(x, y)
                 entities.add(cn)
                 coins.add(cn)
                 entities.add(bl)
-                platforms.append(bl)
-                enemy_platforms.append(bl)
+                platforms.add(bl)
+                enemy_platforms.add(bl)
             if col == '&':
                 ch = Cherry(x, y)
                 entities.add(ch)
                 enemys.add(ch)
                 ib = ItemBlock(x, y, ch)
                 entities.add(ib)
-                platforms.append(ib)
-                enemy_platforms.append(ib)
+                platforms.add(ib)
+                enemy_platforms.add(ib)
             if col == 'C':
                 cn = Coin(x, y)
                 entities.add(cn)
@@ -102,12 +105,12 @@ def main():
             if col == '_':
                 fp = FlyingPlatform(x, y)
                 entities.add(fp)
-                platforms.append(fp)
+                platforms.add(fp)
                 fl_platforms.add(fp)
             if col == '%':
                 ep = EnemyPlatform(x, y)
                 entities.add(ep)
-                enemy_platforms.append(ep)
+                enemy_platforms.add(ep)
             if col == '*':
                 hero = Player(x, y)
                 entities.add(hero)
