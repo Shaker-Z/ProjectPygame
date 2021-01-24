@@ -1,7 +1,7 @@
 from blocks import *
 from player import *
 from enemy import *
-import pygame
+import pygame, subprocess
 
 WIN_WIDTH = 1000
 WIN_HEIGHT = 700
@@ -185,3 +185,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+    pygame.quit()
+    subprocess.call(['python', 'START.py'], shell=True)

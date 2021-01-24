@@ -69,7 +69,6 @@ class Player(pygame.sprite.Sprite):
 
         if self.on_enemy(enemys) and self.clock.get_time() > 100:
             self.hp -= 1
-            print(self.hp)
 
     def collide(self, xvel, yvel, platforms, enemys, coins):
         for p in pygame.sprite.groupcollide(platforms, pygame.sprite.GroupSingle(self), False, False):
