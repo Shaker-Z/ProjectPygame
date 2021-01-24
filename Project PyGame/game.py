@@ -37,11 +37,8 @@ def main():
     enemy_platforms = pygame.sprite.Group()
     win_platforms = []
     camera = Camera()
-    levelname = int(input('Номер уровня(1,2):'))
-    if levelname == 1:
-        levelname = 'level.txt'
-    elif levelname == 2:
-        levelname = 'level2.txt'
+    with open('lvl.txt', mode='rt', encoding='utf8') as lvl:
+        levelname = f'level{lvl.read()}.txt'
     if levelname == 'level2.txt':
         pos = 'under'
         bg = pygame.transform.scale(pygame.image.load('data/objects/bg_castle.png').convert(), (WIN_WIDTH, WIN_HEIGHT))
@@ -60,7 +57,7 @@ def main():
     for row in level[::-1]:
         for col in row:
             if col == '^':
-                pf = Platform(x, y, pos)
+                pf = Wall(x, y)
                 updateble_platforms.add(pf)
                 entities.add(pf)
                 platforms.add(pf)
@@ -81,6 +78,12 @@ def main():
                 platforms.add(pf)
                 enemy_platforms.add(pf)
                 f = True
+
+            if col == 'w':
+                wl = Wall(x, y)
+                entities.add(wl)
+                platforms.add(wl)
+                enemy_platforms.add(wl)
 
             if col == '#':
                 bl = Block(x, y)

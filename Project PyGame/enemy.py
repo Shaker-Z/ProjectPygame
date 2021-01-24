@@ -1,4 +1,4 @@
-import pygame
+import pygame, random
 
 MOVE_SPEED = 2
 WIDTH = 35
@@ -10,6 +10,7 @@ HG_HEIGHT = 33
 TM_WIDTH = 41
 TM_HEIGHT = 45
 GRAVITY = 0.35
+ENEMYS = ['data/enemys/slime.png', 'data/enemys/slimeBlue.png', 'data/enemys/slimeGreen.png']
 
 
 class Enemy(pygame.sprite.Sprite):
@@ -18,7 +19,7 @@ class Enemy(pygame.sprite.Sprite):
         self.xvel = -MOVE_SPEED
         self.startX = x
         self.startY = y
-        self.image = pygame.transform.scale(pygame.image.load('data/enemys/slime.png').convert(),
+        self.image = pygame.transform.scale(pygame.image.load(ENEMYS[random.randint(0, 2)]).convert(),
                                             (WIDTH, HEIGHT))
         self.image.set_colorkey((0, 0, 0))
         self.rect = pygame.Rect(x, y, WIDTH, HEIGHT)
