@@ -107,7 +107,6 @@ class Player(pygame.sprite.Sprite):
                         e.hide()
                     elif e.__class__.__name__ == 'Termite':
                         self.hp -= 1
-                        print(self.hp)
                 if e.__class__.__name__ == 'Cherry':
                     e.kill()
                     self.hp += 1
